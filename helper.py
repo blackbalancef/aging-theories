@@ -17,7 +17,7 @@ def file_reader(file_name):
 
 
 if __name__ == '__main__':
-    file_name = 'aging_theories_papers_2025-10-22_00-45.csv'
+    file_name = 'aging_theories_papers_2025-10-22_14-32.csv'
     df = file_reader(file_name)
     print(df.info())
-    print(df)
+    print(len(df))

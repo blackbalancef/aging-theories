@@ -3,7 +3,7 @@ import config
 from crawlers import aging_theory_crawler, pubmed, pmc
 
 if __name__ == "__main__":
-    n_max_papers = 1  # Optional: maximum number of papers to retrieve
+    n_max_papers = 1000  # Optional: maximum number of papers to retrieve
     # date_from = "2020/01/01"  # Optional: start date
     # date_to = "2026/01/01"  # Optional: end date
 
