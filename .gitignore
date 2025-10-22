@@ -112,21 +112,4 @@ data_output/*
 data/pdfs/*
 *.pdf
 !examples/**/*.pdf
-
-# Test files
-test_*.py
-
-# Temporary/internal documentation (keep only README.md)
-FIXES.md
-FIX_*.md
-QUICK*.md
-QUICK*.txt
-START_GUIDE.md
-SERVICE_README.md
-LOGGING_GUIDE.md
-IMPLEMENTATION_SUMMARY.md
-THEORY_CLASSIFICATION*.md
-*_GUIDE.md
-*_COMMANDS.sh
-ЗАПУСК.md
-ТЕОРИИ_СТАРЕНИЯ.md
+q
