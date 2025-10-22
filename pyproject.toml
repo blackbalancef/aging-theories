@@ -1,0 +1,16 @@
+[project]
+name = "hackaton"
+version = "0.1.0"
+description = "PubMed API Client"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "ipykernel>=7.0.1",
+    "jinja2>=3.1.6",
+    "loguru>=0.7.3",
+    "nebius>=0.3.2",
+    "openai>=2.6.0",
+    "pandas>=2.3.3",
+    "pydantic-settings>=2.11.0",
+    "requests>=2.31.0",
+]

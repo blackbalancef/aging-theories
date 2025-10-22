@@ -1,0 +1,4 @@
+Abstract
+Aging is often attributed to the detrimental side effects of beneficial traits but not a programmed adaptive process. Alternatively, the pathogen control hypothesis posits that defense against infectious diseases may provide a strong selection force for restriction of lifespan. Aging might have evolved to remove older individuals who carry chronic diseases that may transmit to their younger kin. Thus, selection for shorter lifespans may benefit kin's fitness. The pathogen control hypothesis addresses arguments typically raised against adaptive aging concepts: it explains the benefit of shorter lifespan and the absence of mutant variants that do not age. We discuss the consistency and explanatory power of this hypothesis and compare it with classic hypotheses of aging.
+
+Keywords: epidemiological models; evolution; programmed aging

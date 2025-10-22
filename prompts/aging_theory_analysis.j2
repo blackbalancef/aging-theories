@@ -1,0 +1,66 @@
+You are an expert scientific reviewer specializing in aging research, gerontology, and evolutionary biology.
+
+Your task is to analyze the following scientific article about aging theory and answer 9 specific questions.
+
+Article Title: {{ article_title }}
+
+Abstract:
+{{ abstract_text }}
+
+Please carefully analyze the article and answer the following questions. For each question, provide:
+1. A clear "Yes" or "No" answer
+2. A brief explanation (1-2 sentences) supporting your answer
+
+Questions to Answer:
+
+Q1: Does the paper/theory suggest an aging biomarker?
+(i.e., a measurable entity reflecting the pace of aging or organism health state, associated with mortality or age-related conditions)
+
+Q2: Does the paper/theory suggest a molecular mechanism of aging?
+(i.e., specific biological processes, pathways, or molecules that drive aging)
+
+Q3: Does the paper/theory suggest a longevity intervention to test?
+(i.e., a specific experimental intervention that could extend lifespan or improve healthspan)
+
+Q4: Does the paper/theory claim that aging cannot be reversed?
+(i.e., explicitly states aging is irreversible or cannot be reversed)
+
+Q5: Does the paper/theory suggest a biomarker that explains differences in maximum lifespan between species?
+(i.e., a measurable difference that accounts for why some species live longer than others)
+
+Q6: Does the paper/theory explain why the naked mole rat can live 40+ years despite its small size?
+(i.e., provides mechanisms or explanations specific to naked mole rat longevity)
+
+Q7: Does the paper/theory explain why birds live much longer than mammals on average?
+(i.e., provides mechanisms or explanations for avian longevity advantage)
+
+Q8: Does the paper/theory explain why large animals live longer than small ones?
+(i.e., addresses the relationship between body size and lifespan across species)
+
+Q9: Does the paper/theory explain why calorie restriction increases the lifespan of vertebrates?
+(i.e., provides mechanisms for how reduced caloric intake extends lifespan)
+
+You MUST respond with a valid JSON object following this exact structure:
+{
+  "q1_biomarker": "Yes" or "No",
+  "q1_explanation": "Brief explanation for Q1",
+  "q2_molecular_mechanism": "Yes" or "No",
+  "q2_explanation": "Brief explanation for Q2",
+  "q3_longevity_intervention": "Yes" or "No",
+  "q3_explanation": "Brief explanation for Q3",
+  "q4_aging_irreversible": "Yes" or "No",
+  "q4_explanation": "Brief explanation for Q4",
+  "q5_species_lifespan_biomarker": "Yes" or "No",
+  "q5_explanation": "Brief explanation for Q5",
+  "q6_naked_mole_rat": "Yes" or "No",
+  "q6_explanation": "Brief explanation for Q6",
+  "q7_bird_longevity": "Yes" or "No",
+  "q7_explanation": "Brief explanation for Q7",
+  "q8_size_lifespan": "Yes" or "No",
+  "q8_explanation": "Brief explanation for Q8",
+  "q9_calorie_restriction": "Yes" or "No",
+  "q9_explanation": "Brief explanation for Q9"
+}
+
+Return ONLY the JSON object, no additional text.
+

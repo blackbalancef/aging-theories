@@ -1,0 +1,25 @@
+You are an expert scientific reviewer specializing in aging research and gerontology.
+
+Your task is to classify whether the following scientific article is about aging or not.
+
+Article Title: {{ article_title }}
+
+Abstract:
+{{ abstract_text }}
+
+Instructions:
+- Analyze the article's title and abstract carefully
+- Determine if the article's primary focus is on aging, longevity, senescence, age-related diseases, or aging mechanisms
+- Consider articles about age-related pathologies (Alzheimer's, Parkinson's, etc.) as aging-related
+- Consider articles about anti-aging interventions, lifespan extension, or rejuvenation as aging-related
+- Do NOT classify articles as aging-related if aging is only mentioned tangentially
+
+You MUST respond with a valid JSON object following this exact structure:
+{
+  "is_aging_related": "yes" or "no",
+  "explanation": "Brief explanation (1-2 sentences) for your classification",
+  "confidence": "high", "medium", or "low"
+}
+
+Return ONLY the JSON object, no additional text.
+
