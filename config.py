@@ -9,6 +9,10 @@ class AppSettings(BaseSettings):
     
     # AI model configuration
     nebius_api_key: str = ""
+    llm_default_model: str = "meta-llama/Meta-Llama-3.1-8B-Instruct"
+    discovery_llm_model: str = ""
+    analysis_llm_model: str = ""
+    theory_llm_model: str = ""
     
     # Additional API keys
     scopus_token: str = ""
@@ -17,6 +21,26 @@ class AppSettings(BaseSettings):
     # PMC configuration (can use NCBI credentials)
     pmc_email: str = ""
     pmc_api_key: str = ""
+    
+    # Database configuration
+    database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/aging_research"
+    
+    # Redis configuration
+    redis_url: str = "redis://localhost:6379/0"
+    redis_queue_name: str = "aging_research:article_analysis"
+    
+    # Service configuration
+    pdf_storage_path: str = "data/pdfs"
+    max_concurrent_analyses: int = 3
+    worker_poll_interval: int = 5  # seconds
+    
+    # Agent configuration
+    tavily_api_key: str = ""  # Optional for web search
+    
+    # Legacy configuration (for backward compatibility with old tools)
+    # Note: TheoryClassificationService now uses LLM for theory matching instead
+    theory_similarity_threshold: float = 0.85  # Deprecated: Used only by legacy tools
+    embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"  # Deprecated: Used only by legacy tools
 
     model_config = SettingsConfigDict(
         env_file = ".env",
@@ -37,6 +61,13 @@ class AppSettings(BaseSettings):
             self.pubmed_api_key = self.ncbi_api_key
         if not self.pubmed_email and self.ncbi_email:
             self.pubmed_email = self.ncbi_email
+        # Populate model overrides with sensible defaults
+        if not self.discovery_llm_model:
+            self.discovery_llm_model = self.llm_default_model
+        if not self.analysis_llm_model:
+            self.analysis_llm_model = self.llm_default_model
+        if not self.theory_llm_model:
+            self.theory_llm_model = self.llm_default_model
 
 config = AppSettings()
 

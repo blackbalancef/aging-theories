@@ -1,0 +1,57 @@
+Extract aging theories from the following research article.
+
+EXISTING THEORIES (prefer using these names if applicable):
+{{ existing_theories }}
+
+ARTICLE:
+Title: {{ article_title }}
+
+Content:
+{{ article_text }}
+
+INSTRUCTIONS:
+1. Identify specific aging theories, hypotheses, or mechanisms discussed in this article
+2. For each theory, provide:
+   - theory_name: Clear, concise name (e.g., "Free Radical Theory of Aging")
+   - description: Brief description of what the theory proposes
+   - evidence_level: "weak", "moderate", or "strong" based on evidence in this article
+   - category: One of these categories:
+     * "nutritional" - diet, calorie restriction, vitamins, supplements
+     * "genetic" - genes, DNA, heredity, epigenetics
+     * "cellular" - cell aging, senescence, cell death
+     * "molecular" - proteins, molecules, biochemical processes
+     * "systemic" - organ systems, inflammation, immune system
+     * "evolutionary" - evolutionary theories of aging
+     * "other" - doesn't fit above categories
+
+3. IMPORTANT: If a theory matches an existing theory name, use EXACTLY that name
+4. Only extract theories that are EXPLICITLY discussed with substantive detail
+5. Avoid generic terms - be specific (not just "mitochondria" but "Mitochondrial Free Radical Theory")
+
+EXAMPLES OF GOOD THEORY NAMES:
+- "Mitochondrial Free Radical Theory of Aging"
+- "Telomere Shortening Theory"
+- "Caloric Restriction Extension of Lifespan"
+- "mTOR Signaling in Aging"
+- "Cellular Senescence and SASP"
+- "Epigenetic Clock Theory"
+- "Antagonistic Pleiotropy Theory"
+
+Return results as a JSON array. If no clear theories found, return empty array: []
+
+Example output format:
+[
+  {
+    "theory_name": "Mitochondrial Free Radical Theory of Aging",
+    "description": "Aging is caused by cumulative damage from reactive oxygen species (ROS) produced by mitochondria during normal metabolism",
+    "evidence_level": "strong",
+    "category": "cellular"
+  },
+  {
+    "theory_name": "Caloric Restriction Extension of Lifespan",
+    "description": "Reducing caloric intake without malnutrition extends lifespan across various species",
+    "evidence_level": "moderate",
+    "category": "nutritional"
+  }
+]
+

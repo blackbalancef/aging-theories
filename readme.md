@@ -1,247 +1,477 @@
-In this readme you will find:
-an overview of the project, what it does, what the limitations
-how to run this project
-what the possibel futur directions
+# Aging Research Service 🧬
 
-# Aging Theory Research Assistant 🧬
-Effortlessly collect, organize, and analyze scientific papers on aging theories – across major databases.
+> AI-powered agentic service for discovering, analyzing, and organizing scientific research on aging theories
 
-This project helps researchers collect and analyze scientific papers about aging theories from major academic databases. Think of it as a smart research assistant that automatically finds and organizes aging-related research papers.
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-green.svg)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-blue.svg)](https://www.postgresql.org/)
+[![Redis](https://img.shields.io/badge/Redis-7+-red.svg)](https://redis.io/)
 
-## Why This Matters 🎯
-- **Save Time**: What would take weeks to collect manually can be done in hours
-- **Stay Current**: Automatically find the newest research about aging theories (need a server)
-- **Comprehensive**: Searches across multiple scientific databases
-- **Organized**: All papers are neatly organized and easy to analyze
+## Overview
 
-## What It Does 🔍
-1. **Collects Papers**: Pulls papers on aging from sources like PubMed, PMC, and more (additions easy).
+This service automates the discovery and analysis of scientific papers about aging theories. It uses AI agents to:
+- **Discover** papers from PubMed, PMC, and other sources
+- **Classify** papers by their relevance to aging research
+- **Extract** aging theories mentioned in papers
+- **Analyze** full-text PDFs using a comprehensive 9-question framework
+- **Organize** everything in PostgreSQL with advanced search capabilities
 
-2. **Extracts Key Details**: For each paper: title, abstract, year, keywords, links/full text, DOI.
+## Key Features
 
-3. **Delivers Usable Data**: Results go directly to clean CSV files compatible with Excel, Google Sheets, and data pipelines
+### 🤖 AI Agents
+- **Discovery Agent**: Searches academic databases and web sources using Crawl4AI
+- **Analysis Agent**: Deep analysis of papers with PDF parsing and theory extraction
+- Both agents use LangChain tools and Nebius AI Studio models
 
-## Getting Started 🚀
+### 📚 Multi-Source Search
+- PubMed / PMC integration with NCBI API
+- Web crawling capabilities via Crawl4AI
+- Extensible architecture for adding more sources
+
+### 🧠 Automatic Theory Classification
+- AI-powered extraction of aging theories from papers
+- Smart matching with existing theories using LLM
+- Theory categories: genetic, cellular, molecular, nutritional, systemic, evolutionary
+- Evidence level assessment (weak, moderate, strong)
+
+### 📊 RESTful API
+- Articles management and search
+- Theory classification and statistics
+- Discovery queue management
+- Cost tracking for AI model usage
+- Source/database statistics
+
+### ⚡ Asynchronous Architecture
+- Redis task queue for background processing
+- Multiple concurrent workers
+- PostgreSQL with async SQLAlchemy
+- FastAPI for high-performance API
+
+### 📥 Data Export
+- Export articles, analyses, and theories to CSV
+- Customizable filters and limits
+- Full dataset export with relationships
+- Compatible with Excel, Google Sheets, and data analysis tools
+
+## Architecture
+
+```
+┌─────────────────────┐
+│   FastAPI Server    │
+│   (app.py)          │
+└──────────┬──────────┘
+           │
+    ┌──────┴──────┐
+    │             │
+┌───▼────┐   ┌───▼────────┐
+│Discovery│   │  Analysis   │
+│ Agent   │   │   Agent     │
+│         │   │  (Worker)   │
+└────┬────┘   └─────┬──────┘
+     │              │
+     │   ┌──────────▼─────┐
+     │   │  Redis Queue    │
+     │   │  (Task Queue)   │
+     │   └────────────────┘
+     │
+┌────▼─────────────────┐
+│    PostgreSQL DB     │
+│  - Articles          │
+│  - Analyses          │
+│  - Theories          │
+│  - Article-Theories  │
+│  - Costs             │
+└──────────────────────┘
+```
+
+## Getting Started
 
 ### Prerequisites
-- Python 3.8 or newer
-- Internet connection
-- NCBI (PubMed) API key (free)
+- Python 3.10+
+- PostgreSQL 14+
+- Redis 7+
+- Docker & Docker Compose (recommended)
 
-### Quick Start
-1. **Setup**:
-   ```bash
-   # Clone the repository
-   git clone https://github.com/blackbalancef/aging-theories.git
-   ```
-   ```bash
-   # Create enviroment 
-   python3 -m venv .venv
-   source .venv/bin/activate   # on macOS/Linux
-   .venv\Scripts\activate      # on Windows
-   ```
-   ```bash
-   # Install required packages
-   pip install -r requirements.txt
-   ```
-2. **Configure**:
-   - Create a `.env` file in the root of the project
-   - Add your API keys into `.env`
-   - Add your search topics in `input/topics.txt`
-   - Add your search queries in `input/queries.txt`
+### Installation
 
-3. **Adjust if needed**
-   In the `main.py` file add the neccecary information, such as:
-   - number of papers per query in the 'input/queries.txt'
-   - date from
-   - date to
+1. **Clone the repository**
+```bash
+git clone https://github.com/blackbalancef/aging-theories.git
+cd aging-theories
+```
 
-4. **Run**:
-   ```bash
-   python main.py
-   ```
+2. **Install uv (modern Python package manager)**
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
 
-## Project Structure 📁
-aging_theory_crawler/
+3. **Install dependencies**
+```bash
+uv sync
+```
 
-├── input/           # Search topics and queries
+4. **Set up environment variables**
+```bash
+cp env.example .env
+# Edit .env with your configuration
+```
 
-├── data_output/     # Your collected results will be there once you run
+Required environment variables:
+```env
+# NCBI API (PubMed/PMC)
+NCBI_EMAIL=your@email.com
+NCBI_API_KEY=your_ncbi_api_key
 
-├── example_output/     # Example of collected results
+# Nebius AI Studio
+NEBIUS_API_KEY=your_nebius_key
+LLM_DEFAULT_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct
 
-├── crawlers/        # Main & database-specific crawlers
+# Database
+DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/aging_research
 
-├── config.py        # API keys and settings from the `.env` you created
+# Redis
+REDIS_URL=redis://localhost:6379/0
+```
 
-└── main.py          # Entrypoint, Run crawlers here
+5. **Start services with Docker Compose**
+```bash
+docker-compose up -d
+```
 
-More detailed:
+This starts:
+- PostgreSQL on port 5432
+- Redis on port 6379
 
-input/ # Your search configuration
-- topics.txt # Research topics to search for 
-- queries.txt # Detailed search queries
+6. **Run database migrations**
+```bash
+uv run alembic upgrade head
+```
 
-example_output/ # Example of saved results
-- file.csv # Results of the search
+7. **Start the API server**
+```bash
+uv run python app.py
+```
 
-data_output/ # Where your results are saved
-- file.csv # Results of the search
+API will be available at `http://localhost:8000`
 
-crawlers/ # Where all crawlers are saved
-- aging_theory_crawler.py # Main crawler code 
-- pubmed.py # PubMed specific code 
-- pmc.py # PMC specific code 
+Interactive docs at `http://localhost:8000/docs`
 
+8. **Start analysis workers** (in separate terminals)
+```bash
+# Start worker 1
+uv run python agents/analysis_agent_worker.py
 
-## Search Topics 🔬
-We search for papers related to:
-- General aging theories
-- Cellular senescence
-- DNA damage and repair
-- Telomeres
-- Oxidative stress
-- And many more...
+# Start worker 2
+uv run python agents/analysis_agent_worker.py
+
+# Start worker 3
+uv run python agents/analysis_agent_worker.py
+```
+
+## Usage
+
+### Discover Papers
+
+Start discovery process:
+```bash
+curl -X POST "http://localhost:8000/api/discover" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "mitochondrial aging theory",
+    "max_results": 50
+  }'
+```
+
+### List Articles
+
+Get all discovered articles:
+```bash
+curl "http://localhost:8000/api/articles"
+```
+
+Search articles:
+```bash
+curl "http://localhost:8000/api/articles/search?q=telomeres"
+```
+
+### View Analysis
+
+Get article analysis:
+```bash
+curl "http://localhost:8000/api/articles/{article_id}/analysis"
+```
+
+### Theory Statistics
+
+Get theory statistics:
+```bash
+curl "http://localhost:8000/api/theories/stats/summary"
+```
+
+List all theories:
+```bash
+curl "http://localhost:8000/api/theories"
+```
+
+Search theories:
+```bash
+curl "http://localhost:8000/api/theories/search?q=mitochondria"
+```
+
+### Queue Status
+
+Check analysis queue:
+```bash
+curl "http://localhost:8000/api/queue/status"
+```
+
+### Cost Tracking
+
+View AI model usage costs:
+```bash
+curl "http://localhost:8000/api/costs"
+```
+
+### Export Data to CSV
+
+Export articles to CSV:
+```bash
+curl "http://localhost:8000/api/export/articles" -o articles.csv
+```
+
+Export analyses to CSV:
+```bash
+curl "http://localhost:8000/api/export/analyses" -o analyses.csv
+```
+
+Export theories to CSV:
+```bash
+curl "http://localhost:8000/api/export/theories" -o theories.csv
+```
+
+Export article-theory relationships:
+```bash
+curl "http://localhost:8000/api/export/article-theories" -o article_theories.csv
+```
+
+Export full dataset (articles + analyses + theories):
+```bash
+curl "http://localhost:8000/api/export/full" -o full_dataset.csv
+```
+
+## API Endpoints
+
+### Articles
+- `POST /api/discover` - Start discovery process
+- `GET /api/articles` - List all articles
+- `GET /api/articles/search` - Search articles
+- `GET /api/articles/{id}` - Get article details
+- `GET /api/articles/{id}/analysis` - Get article analysis
+
+### Theories
+- `GET /api/theories` - List all aging theories
+- `GET /api/theories/search` - Search theories
+- `GET /api/theories/{id}` - Get theory details
+- `GET /api/theories/{id}/articles` - Get articles for theory
+- `GET /api/theories/stats/summary` - Theory statistics
+- `GET /api/articles/{id}/theories` - Get theories for article
+
+### Queue & Status
+- `GET /api/queue/status` - Queue statistics
+- `GET /api/sources` - Database source statistics
+- `GET /api/costs` - AI model usage costs
+- `GET /health` - Service health check
+
+### Export (CSV)
+- `GET /api/export/articles` - Export articles to CSV
+- `GET /api/export/analyses` - Export analyses to CSV
+- `GET /api/export/theories` - Export theories to CSV
+- `GET /api/export/article-theories` - Export article-theory links to CSV
+- `GET /api/export/full` - Export complete dataset to CSV
+
+## Project Structure
+
+```
+hackaton/
+├── agents/                    # AI agents
+│   ├── discovery_agent.py     # Discovery agent
+│   ├── analysis_agent.py      # Analysis agent
+│   ├── analysis_agent_worker.py  # Worker process
+│   └── tools/                 # LangChain tools
+│       ├── web_search_tool.py
+│       ├── crawl4ai_tool.py
+│       ├── database_tool.py
+│       ├── pdf_parser_tool.py
+│       └── theory_extraction_tool.py
+├── api/                       # FastAPI routes
+│   ├── routes/
+│   │   ├── articles.py
+│   │   ├── theories.py
+│   │   ├── discovery.py
+│   │   ├── queue.py
+│   │   ├── sources.py
+│   │   └── costs.py
+│   └── schemas.py             # Pydantic models
+├── db/                        # Database layer
+│   ├── models.py              # SQLAlchemy models
+│   ├── database.py            # DB connection
+│   └── repository.py          # Data access layer
+├── task_queue/                # Redis task queue
+│   ├── redis_client.py
+│   └── task_queue.py
+├── services/                  # Business logic
+│   ├── discovery_service.py
+│   ├── analysis_service.py
+│   ├── analysis_worker.py
+│   ├── theory_classification_service.py
+│   └── pdf_parser.py
+├── crawlers/                  # Source-specific crawlers
+│   ├── base.py
+│   ├── pubmed.py
+│   └── pmc.py
+├── prompts/                   # AI prompt templates (Jinja2)
+│   ├── discovery_agent_system.j2
+│   ├── analysis_agent_system.j2
+│   ├── theory_extraction.j2
+│   ├── aging_theory_analysis.j2
+│   └── article_classififcation.j2
+├── alembic/                   # Database migrations
+├── app.py                     # FastAPI application
+├── config.py                  # Configuration
+├── docker-compose.yml         # Docker services
+└── pyproject.toml            # Dependencies (uv)
+```
+
+## Configuration
+
+### AI Models
+
+The service uses Nebius AI Studio (open-source LLM models):
+
+- Default: `meta-llama/Meta-Llama-3.1-8B-Instruct`
+- Available: `Meta-Llama-3.1-70B-Instruct`, `Meta-Llama-3.1-405B-Instruct`
+
+Configure in `.env`:
+```env
+LLM_DEFAULT_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct
+DISCOVERY_LLM_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct
+ANALYSIS_LLM_MODEL=meta-llama/Meta-Llama-3.1-70B-Instruct
+THEORY_LLM_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct
+```
+
+### Worker Configuration
+
+```env
+MAX_CONCURRENT_ANALYSES=3      # Concurrent analysis workers
+WORKER_POLL_INTERVAL=5         # Seconds between queue polls
+PDF_STORAGE_PATH=data/pdfs     # PDF storage directory
+```
+
+## Development
+
+### Database Migrations
+
+Create new migration:
+```bash
+uv run alembic revision --autogenerate -m "description"
+```
+
+Apply migrations:
+```bash
+uv run alembic upgrade head
+```
+
+Rollback migration:
+```bash
+uv run alembic downgrade -1
+```
+
+### Adding Dependencies
+
+```bash
+uv add package-name
+```
+
+### Code Style
+
+- Use async functions where possible
+- Use loguru for logging (not print)
+- Follow PEP 8 style guidelines
+
+## API Keys Setup
+
+### NCBI API Key (PubMed/PMC)
+
+1. Create account at https://account.ncbi.nlm.nih.gov/
+2. Sign in → Account Settings
+3. API Key Management → Create API Key
+4. Copy key to `.env`
+
+Benefits:
+- 10 requests/second (vs 3 without key)
+- Required for large-scale retrieval
+
+### Nebius AI Studio
+
+1. Get API key from https://nebius.ai/
+2. Add to `.env` as `NEBIUS_API_KEY`
+
+## Cost Tracking
+
+The service tracks AI model usage costs automatically:
+
+- Input/output tokens per model
+- Cost per request
+- Total costs by model
+- Costs by endpoint/agent
+
+Nebius pricing (per 1M tokens):
+- Llama-3.1-8B: $0.10 input, $0.10 output
+- Llama-3.1-70B: $0.80 input, $0.80 output
+- Llama-3.1-405B: $4.00 input, $4.00 output
 
 ## Limitations
-- API rate limits: Built-in delays to avoid bans; 
-- Large-scale runs limited by recent team formation (after prior teams dissolved).
-- Hackathon Mode: Used pre-set queries for speed – fully configurable for production.
 
-## Results 📊
-- Results are saved as CSV files in the `data_output` folder
-- Each file is named with the date and time of the search
-- Easy to open in Excel, Google Sheets, or similar programs
+- NCBI API rate limits: 10 req/sec with key, 3 req/sec without
+- Redis required for task queue functionality
+- PDF parsing depends on article availability
+- Theory extraction quality depends on abstract/full-text availability
 
-## Contributing 🤝
-We welcome contributions! If you'd like to help:
+## Contributing
+
+We welcome contributions!
+
 1. Fork the repository
-2. Create a new branch
-3. Make your changes
-4. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## Need Help? 💡
-- Open an issue for bug reports
-- Contact the maintainers for questions
+## License
 
-## License 📜
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
 
-## Acknowledgments 🙏
+## Acknowledgments
+
 - NCBI for PubMed and PMC access
-- Nature Publishing Group
+- Nebius AI Studio for LLM infrastructure
+- LangChain for agent framework
+- Crawl4AI for web crawling capabilities
 
-Made with ❤️ by bioloshki team:
+## Team
 
-Mariia BAI,
-Ivan MATVEEV
+Made with ❤️ by **bioloshki team**:
+- Mariia BAI
+- Ivan MATVEEV
 
-For the HackAging: Theories of Aging Challenge https://www.hackaging.ai/
-Challenge: THEORIES OF AGING https://www.hackaging.ai/challenges/aging-theories/
+For the [HackAging: Theories of Aging Challenge](https://www.hackaging.ai/challenges/aging-theories/)
 
-------
-## API Key
-### Benefits of API Key:
+## Contact
 
-10 requests/second (vs 3 without key)
+- Open an issue for bug reports
+- Contact maintainers for questions
+- GitHub: [blackbalancef/aging-theories](https://github.com/blackbalancef/aging-theories)
 
-3.3x faster data collection
+---
 
-Required for large-scale retrieval
-
-### API KEYS setup
-Get NCBI API Key:
-
-1.Create NCBI account: https://account.ncbi.nlm.nih.gov/
-
-2.Sign in → Click username (top right) → Account Settings
-
-3.Scroll to "API Key Management" → Click "Create an API Key"
-
-4.Copy the key
-
-5. Create ".env" file or you can directly write your credentials to config.py.
-```
-NCBI_EMAIL='your@email.com'
-NCBI_API_KEY='your_key'
-```
-6. Don't forget to remove it when you push it.
-
-7. You can add more topics in the 'input/topics.txt', or write your queries directly in 'queries.txt', keeping the same writing style
-
-We would use wildcards for variations (see example in 'input/queries.txt'):
-
-mechanism*  → matches mechanism, mechanisms, mechanistic
-
-theor*      → matches theory, theories, theoretical
-
------------------
-### Limitations:
-To avoid bans, we had to include delays between requests, which limited how much we could run. Since our team was only finalized a few days ago (after two teams dropped out), we didn’t have time for large-scale runs.
-
-#### Europe PMC
-
-https://dev.springernature.com/register/
-The Basic OA API will usually provide for a rate limit of 500 hits / day and 100 hits / min.Basic OA API Access Key will usually provide for up to 8 constraints.Publisher endeavors to achieve the aforementioned performance, but does not make any warranty as to the availability or performance of the Basic OA APIs.For security reasons Publisher may exchange the Access Key any time at Publisher’s discretion
-
-Rate limits for both APIs are 500 hits/day and 100 hits/minute, with up to 8 constraints per key.
-API Rate Limits Explained
-Springer Nature sets rate limits for both the Open Access API and the Metadata API to protect system resources and ensure fair usage:
-
-Daily Limit: You can make up to 500 requests per day with a single API key.
-
-Minute Limit: You can make up to 100 requests per minute.
-
-Constraints: Each API key usually supports up to 8 simultaneous constraints (which are typically filter parameters or query conditions — you’ll want to check the docs for specific use cases).
-
------------------------------------------
-### F.A.Q.:
-What Happens If We Exceed Limits?
-
-If we go beyond these limits, our API access may be temporarily suspended or our requests will start failing (typically with a rate limit error). Circumventing these restrictions by creating multiple accounts or API keys is explicitly forbidden and may lead to permanent suspension.
-
-Tips for Maximizing Paper Collection
-Plan downloads: Spread requests evenly to avoid hitting the limits all at once. For example, if we want to collect many papers, we should consider running our scripts overnight and batching requests.
-
-Optimizing queries: Each API request should retrieve as much relevant data as possible. We should use the documentation to learn how to get all metadata with a single query (for example, paginating effectively).
-
-No circumvention: Do not try to register multiple keys or accounts to bypass limits; the agreement strictly forbids this, and Springer Nature can revoke access for violations.
-
-Remember:
-
-500 hits/day, 100 hits/minute per key
-
-No multiple accounts or keys for one user
-
-If at the limit, pause and try again later
-
------------------------------------------
-
-### Interesting point for NCBI:
-this 2 links give the same results: 
-- Canonical NCBI format: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7612201/
-- Alternate legacy PMC format: https://pmc.ncbi.nlm.nih.gov/articles/PMC7612201/
-
-For this hackathon we kept the legacy, as it was provided in the 5 examples
-
------
-Future optimisations:
-Possible to optimise * parts with AWS, for example.
-lambda makes API calls to third-party API, write the data to Amazon S3, running on schedule
-
-S3 stores the data
-AWD Glue transforms the raw data
-S3 Store clean data
-Visualisation with Quicksight
-
-
-Add more crawlers from the list:
-PubMed,
-PMC,
-arXiv
-Nature,
-ScienceDirect,
-Frontiers in Aging https://www.frontiersin.org/
-CORE, Unpaywall,
-Semantic Scholar Open API,
-Springer, Scopus, Web of Science
+**Status**: Active Development | **Version**: 1.0.0 | **Last Updated**: October 2025
