@@ -1,0 +1,58 @@
+
+# General aging theories
+q01_general_theories=("aging"[MeSH] OR "senescence"[MeSH]) AND (theory[tiab] OR theories[tiab] OR mechanism*[tiab])
+
+# Hallmarks
+q02_hallmarks="hallmarks of aging"[tiab]
+q03_cellular_senescence="cellular senescence"[MeSH]
+
+# Oxidative stress
+q04_oxidative_stress=("oxidative stress"[MeSH] OR "free radicals"[MeSH]) AND "aging"[MeSH]
+q05_ros="reactive oxygen species"[tiab] AND "aging"[tiab]
+
+# Telomeres
+q06_telomeres="telomere"[MeSH] AND "aging"[MeSH]
+q07_telomerase="telomerase"[MeSH] AND "aging"[MeSH]
+
+# Mitochondria
+q08_mitochondria="mitochondria"[MeSH] AND "aging"[MeSH]
+q09_mitochondrial_dysfunction="mitochondrial dysfunction"[tiab] AND "aging"[tiab]
+
+# DNA damage
+q10_dna_damage="DNA damage"[MeSH] AND "aging"[MeSH]
+q11_genomic_instability="genomic instability"[tiab] AND "aging"[tiab]
+
+# Epigenetics
+q12_epigenetics="epigenetic"[tiab] AND "aging"[MeSH]
+q13_dna_methylation="DNA methylation"[MeSH] AND "aging"[MeSH]
+
+# Proteostasis
+q14_proteostasis="proteostasis"[tiab] AND "aging"[tiab]
+q15_protein_aggregation="protein aggregation"[tiab] AND "aging"[tiab]
+
+# Nutrient sensing
+q16_nutrient_sensing="nutrient sensing"[tiab] AND "aging"[tiab]
+q17_mtor="mTOR"[tiab] AND "aging"[tiab]
+q18_insulin_igf=("insulin"[MeSH] OR "IGF"[tiab]) AND "aging"[MeSH] AND "longevity"[tiab]
+
+# Stem cells
+q19_stem_cells="stem cell exhaustion"[tiab]
+q20_stem_cell_aging="stem cells"[MeSH] AND "aging"[MeSH]
+
+# Inflammation
+q21_inflammaging="inflammaging"[tiab]
+q22_chronic_inflammation="chronic inflammation"[tiab] AND "aging"[MeSH]
+
+# SASP
+q23_sasp="SASP"[tiab] OR "senescence associated secretory phenotype"[tiab]
+
+# Autophagy
+q24_autophagy="autophagy"[MeSH] AND "aging"[MeSH]
+q25_mitophagy="mitophagy"[tiab] AND "aging"[tiab]
+
+# Other theories
+q26_programmed_aging="programmed aging"[tiab]
+q27_ages="advanced glycation end products"[MeSH] AND "aging"[MeSH]
+q28_intercellular="intercellular communication"[tiab] AND "aging"[tiab]
+q29_comprehensive=("aging"[MeSH] OR "senescence"[MeSH]) AND ("hallmark*"[tiab] OR "mechanism*"[tiab] OR "pathway*"[tiab])
+q30_gerontology="gerontology"[MeSH] AND (theory[tiab] OR theories[tiab])
